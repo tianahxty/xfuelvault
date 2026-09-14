@@ -3,7 +3,7 @@ from decouple import config
 
 PAYSTACK_BASE_URL = "https://api.paystack.co"
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
-PAYSTACK_CALLBACK_URL = config('PAYSTACK_CALLBACK_URL', default='http://127.0.0.1:8000/paystack-success-redirect/')
+PAYSTACK_CALLBACK_URL = config('PAYSTACK_CALLBACK_URL', default='http://127.0.0.1:8000')
 
 
 headers = {
@@ -17,7 +17,7 @@ def initializePaystackPayment(email : str, amount : float, reference : str):
     data = {
         "email": email,
         "amount": amount,  # Represents 5,000 NGN
-        "callback_url":PAYSTACK_CALLBACK_URL,
+        "callback_url":PAYSTACK_CALLBACK_URL+'/paystack-success-redirect/',
         "reference" : reference
     }
     try :
