@@ -17,7 +17,7 @@ def initializePaystackPayment(email : str, amount : float, reference : str):
     data = {
         "email": email,
         "amount": amount,  # Represents 5,000 NGN
-        "callback_url":PAYSTACK_CALLBACK_URL+'/paystack-success-redirect/',
+        "callback_url":PAYSTACK_CALLBACK_URL+'/purchase/create/',
         "reference" : reference
     }
     try :
