@@ -1,0 +1,71 @@
+{% extends "user/base.html" %}
+
+{% block main-content %}
+
+<div class="content">
+    <div class="page-head"><span class="eyebrow">How Far <h1>{{ user.full_name|default:user.username }}</h1></span></div>
+
+    <div class="wallet-card">
+      <div class="wallet-label">My LitreWallet</div>
+      <div class="wallet-figure">{{ available_litres|floatformat:3 }}<span class="unit">L</span></div>
+      <div class="wallet-sub">Available to redeem</div>
+      <div class="gauge"><i class="on" style="height:6px"></i><i class="on" style="height:8px"></i><i class="on" style="height:10px"></i><i class="on" style="height:12px"></i><i class="on" style="height:14px"></i><i class="on" style="height:16px"></i><i class="on" style="height:14px"></i><i class="on" style="height:12px"></i><i class="on" style="height:16px"></i><i class="on" style="height:10px"></i><i class="" style="height:8px"></i><i class="" style="height:14px"></i><i class="" style="height:9px"></i><i class="" style="height:12px"></i></div>
+      <div class="wallet-protect"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg><div>Your litres are protected from future price increases until expiry.</div></div>
+      <div class="wallet-actions">
+        <a class="btn btn-primary" href="/buylitre/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg> Buy Litres</a>
+        <a class="btn btn-secondary" href="/redeemfuel/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><path d="M14 14h2.5v2.5H14zM19 14h1.5M19 19h1.5M14 19h1"/></svg> Redeem Fuel</a>
+      </div>
+    </div>
+
+    <div class="section-head"><h2>Current fuel price</h2><a class="section-link" href="/litrelots/">Price history</a></div>
+    <div class="card">
+      <div class="price-row">
+        
+        <div>
+          <div class="eyebrow">Per litre today</div>
+          <div class="price-figure" style="font-size:28px;margin-top:4px">{{ price.price_per_litre }}<span style="font-size:14px;color:var(--ink-faint)">/L</span></div>
+        </div>
+        <span class="tag tag-up"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M7 17 17 7M9 7h8v8"/></svg> +3.1% this week</span>
+      </div>
+      <div class="divider"></div>
+      <div class="price-row">
+        <div class="eyebrow">Estimated current value of your wallet</div>
+      </div>
+      <div class="mono" style="font-size:22px;font-weight:500;margin-top:4px">₦{{ estimated_value|floatformat:2|default:"0.00" }}</div>
+      <div class="input-help" style="margin-top:4px">Based on today's price of ₦{{ price.price_per_litre }}/L — not a cash balance. Your litres, not this figure, are what's guaranteed.</div>
+    </div>
+
+    <div class="section-head"><h2>Expiring soon</h2><a class="section-link" href="16-expiring-litres.html">See all</a></div>
+    {% if expiring_lot %}
+    <div class="notice notice-amber" style="border-left:3px solid var(--amber-600);align-items:center;justify-content:space-between;gap:14px">
+      <div style="display:flex;gap:10px;align-items:flex-start"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="flex-shrink:0;margin-top:1px"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg>
+      <div><strong>{{ expiring_lot.litres_remaining|floatformat:3 }}L</strong> expire before <strong>{{ expiring_lot.expires_at|date:"F j" }}</strong>. Redeem soon to avoid losing access.</div></div>
+      <a class="btn btn-sm" style="background:var(--amber-700);color:#fff;flex-shrink:0" href="16-expiring-litres.html">Redeem</a>
+    </div>
+    {% else %}
+    <div class="card-flush" style="padding:14px 16px">
+      <div class="input-help" style="margin:0">Nothing expiring soon.</div>
+    </div>
+    {% endif %}
+
+    <div class="section-head"><h2>Recent purchases</h2><a class="section-link" href="15-transaction-history.html">See all</a></div>
+    {% for purchases in purchase_history %}
+    <div class="card-flush" style="padding:6px 16px">
+      <div class="txn"><div class="txn-icon buy"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"/></svg></div><div class="txn-body"><div class="txn-title">You purchased litres</div><div class="txn-sub">{{ purchases.created_at|date:"M j · g:i A" }} · ₦{{ purchases.price_per_litre }}/L</div></div><div class="txn-amt"><div class="txn-litres">{{ purchases.litres_bought|floatformat:3 }}L</div><div class="txn-naira">₦{{ purchases.total_amount }}</div></div></div>
+    </div>
+    {% empty %}
+    <div class="card-flush" style="padding:14px 16px">
+      <div class="input-help" style="margin:0">No purchases yet.</div>
+    </div>
+    {% endfor %}
+
+    <div class="section-head"><h2>Recent redemptions</h2><a class="section-link" href="15-transaction-history.html">See all</a></div>
+    <div class="card-flush" style="padding:6px 16px">
+      <div class="txn"><div class="txn-icon redeem"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M4 11h10M2 21h14"/><path d="M14 8.5 17 11v6.5a1.5 1.5 0 0 0 3 0V10a2 2 0 0 0-.6-1.4L17.5 7"/></svg></div><div class="txn-body"><div class="txn-title">Total Lekki Phase 1</div><div class="txn-sub">Aug 22 · 4:12 PM</div></div><div class="txn-amt"><div class="txn-litres">−4.500L</div></div></div>
+    </div>
+
+    <footer class="foot-note">Your purchased litres remain available at the quantity you bought, subject to their validity period.</footer>
+    
+</div>
+
+{% endblock %}

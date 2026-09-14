@@ -1,0 +1,85 @@
+{% extends "admin/master.html" %}
+{% block content %}
+<main class="main-content">
+ 
+    <!-- PAGE HEADING -->
+    <div class="station-heading">
+        <div class="page-heading">
+            <small>ADMIN / USERS</small>
+            <h1>User Management</h1>
+        </div>
+    </div>
+ 
+    <!-- STATS -->
+    <div class="station-details">
+        <div class="card detail-card">
+            <small>TOTAL USERS</small>
+            <p>{{ total_users }}</p>
+        </div>
+        <div class="card detail-card">
+            <small>ACTIVE USERS</small>
+            <p>{{ active_users }}</p>
+        </div>
+        <div class="card detail-card">
+            <small>STAFF / ADMINS</small>
+            <p>{{ staff_users }}</p>
+        </div>
+        <div class="card detail-card">
+            <small>NEW THIS MONTH</small>
+            <p>{{ new_users_this_month }}</p>
+        </div>
+    </div>
+ 
+    <!-- USERS TABLE -->
+    <div class="all-stations">
+        <h2>All Users</h2>
+ 
+        <div class="card stations-table">
+ 
+            <div class="stations-header">
+                <span>USERNAME</span>
+                <span>EMAIL</span>
+                <span>DATE JOINED</span>
+                <span>LAST LOGIN</span>
+                <span>STATUS</span>
+            </div>
+ 
+            {% for user in users %}
+            <div class="station-row">
+                <span class="station-name">{{ user.username }}</span>
+                <span>{{ user.email|default:"—" }}</span>
+                <span>{{ user.date_joined|date:"M d, Y" }}</span>
+                <span>{{ user.last_login|date:"M d, Y"|default:"Never" }}</span>
+                <span>
+                    {% if user.is_active %}
+                        <span class="status active-status">Active</span>
+                    {% else %}
+                        <span class="status inactive-status">Inactive</span>
+                    {% endif %}
+                </span>
+            </div>
+            {% empty %}
+            <div class="station-row">
+                <span>No users found.</span>
+            </div>
+            {% endfor %}
+ 
+        </div>
+ 
+        {% if is_paginated %}
+        <div class="pagination-controls" style="margin-top:14px; display:flex; gap:8px; align-items:center; font-size:10px;">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+ 
+    </div>
+ 
+</main>
+{% endblock %}
+ 

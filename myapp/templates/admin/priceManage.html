@@ -1,0 +1,130 @@
+ {% extends 'admin/master.html' %}
+
+ {% block content %}
+ <main class="main-content">
+
+        <div class="page-heading">
+            <small>PRICING</small>
+            <h1>Price Management</h1>
+        </div>
+
+
+        <div class="price-layout">
+
+            <!-- LEFT COLUMN -->
+            <div class="price-left">
+
+                <!-- CURRENT PRICE -->
+                <section class="card current-price">
+
+                    <small>CURRENT PRICE</small>
+
+                    <div class="price">
+                        <span>₦</span><span id="PriceValue">{{ price.price_per_litre|default:"0.00" }}</span><span class="unit">/ litre</span>
+                    </div>
+
+                   <div style="font-size: 0.7rem; color: #666; margin-top: 0.5rem;">
+                      {% if price %}
+                        effective {{ price.effective_from|date:"M d, Y — H:i" }}
+                        {% if price.set_by %} · set by {{ price.set_by.username }}{% endif %}
+                      {% else %}
+                        No price recorded yet
+                      {% endif %}
+                    </div>
+
+                </section>
+
+
+                <!-- SET NEW PRICE -->
+              <form method="post" novalidate>
+                {% csrf_token %}
+
+                <section class="card new-price">
+
+                    <small>SET NEW PRICE</small>
+
+                    <label for="price">
+                        New price per litre (₦)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        value="1,050"
+                        placeholder="Enter price"
+                        name="price_per_litre"
+                        required
+                    >
+
+                    <!-- <label for="date">
+                        Effective date & time
+                    </label> -->
+
+                    <!-- <input
+                        type="text"
+                        id="date"
+                        value="Aug 15, 2026 · 9:00 AM"
+                    > -->
+                    {% if error %}
+                    <div class="warning">
+                        <span>⚠️</span>
+                        <p>{{ error }}</p>
+                    </div>
+                    {% endif %}
+                    {% if success %}
+                    <div class="warning" style="background-color: #7fff19; color: white !important;">
+                        <p>{{ success }}</p>
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="primary-button">
+                        Set New Price
+                    </button>
+
+                </section>
+              </form>
+
+            </div>
+
+
+            <!-- PRICE HISTORY -->
+            <section class="history">
+
+                <h2>Price history</h2>
+
+                <div class="history-table">
+
+                    <div class="history-header">
+                        <span>EFFECTIVE FROM</span>
+                        <span>PRICE</span>
+                        <span>SET BY</span>
+                    </div>
+
+
+                    <div class="history-row">
+                      {% for price in price_history %}
+                        <span>
+                           {{ price.effective_from}}
+                        </span>
+
+                        <span>{{price.price_per_litre}}/L</span>
+
+                        <span>
+                            {{ price.set_by.username}}
+                        </span>
+                      {% endfor %}
+                    </div>
+
+                </div>
+
+                <p class="history-note">
+                    Historical prices cannot be edited. They're a
+                    permanent, auditable record.
+                </p>
+
+            </section>
+
+        </div>
+
+    </main>
+    {% endblock %}

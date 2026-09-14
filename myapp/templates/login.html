@@ -1,0 +1,391 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in — LitreVault</title>
+ 
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
+ 
+    :root {
+      --bg: #0a0f1c;
+      --surface: #12192b;
+      --surface-2: #1b2440;
+      --border: #232b42;
+      --accent: #ffb020;
+      --accent-soft: rgba(255, 176, 32, 0.12);
+      --success: #34d399;
+      --text: #edf1fa;
+      --text-muted: #7c879e;
+      --danger: #f3716b;
+ 
+      --font-display: 'Sora', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+ 
+    * { box-sizing: border-box; }
+ 
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+ 
+    .auth-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+    }
+ 
+    @media (max-width: 860px) {
+      .auth-shell { grid-template-columns: 1fr; }
+      .auth-console { min-height: 280px; }
+    }
+ 
+    /* ---------- Left: price console (signature element) ---------- */
+ 
+    .auth-console {
+      position: relative;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,176,32,0.07), transparent 45%),
+        linear-gradient(180deg, #0d1322 0%, #080c16 100%);
+      border-right: 1px solid var(--border);
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+ 
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+    }
+ 
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--accent);
+      display: grid;
+      place-items: center;
+      color: #1a1204;
+      font-weight: 800;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+ 
+    .console-board { margin: auto 0; }
+ 
+    .console-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+ 
+    .console-price {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: clamp(48px, 7vw, 76px);
+      line-height: 1;
+      color: var(--accent);
+      text-shadow: 0 0 24px rgba(255, 176, 32, 0.35);
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+ 
+    .console-price .unit {
+      font-size: 0.28em;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+ 
+    .console-digit {
+      display: inline-block;
+      animation: flicker-in 0.6s ease-out backwards;
+    }
+    .console-digit:nth-child(1) { animation-delay: 0.05s; }
+    .console-digit:nth-child(2) { animation-delay: 0.10s; }
+    .console-digit:nth-child(3) { animation-delay: 0.15s; }
+    .console-digit:nth-child(4) { animation-delay: 0.20s; }
+    .console-digit:nth-child(5) { animation-delay: 0.25s; }
+ 
+    @keyframes flicker-in {
+      0%   { opacity: 0; filter: blur(2px); }
+      60%  { opacity: 0.7; }
+      100% { opacity: 1; filter: blur(0); }
+    }
+ 
+    .console-delta {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+ 
+    .console-sparkline {
+      margin-top: 28px;
+      width: 100%;
+      max-width: 320px;
+      height: 48px;
+      display: block;
+    }
+ 
+    .console-history {
+      margin-top: 18px;
+      display: flex;
+      gap: 18px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+ 
+    .console-history span b { color: var(--text); font-weight: 600; }
+ 
+    .console-foot {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 340px;
+    }
+ 
+    @media (prefers-reduced-motion: reduce) {
+      .console-digit { animation: none; }
+    }
+ 
+    /* ---------- Right: form panel ---------- */
+ 
+    .auth-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      background: var(--bg);
+    }
+ 
+    .auth-card { width: 100%; max-width: 380px; }
+ 
+    .auth-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.01em;
+      margin: 0 0 6px;
+    }
+ 
+    .auth-sub {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin: 0 0 32px;
+    }
+ 
+    .auth-sub a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .auth-sub a:hover { text-decoration: underline; }
+ 
+    .field-group { margin-bottom: 18px; }
+ 
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+    }
+ 
+    .field-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+ 
+    .field-input::placeholder { color: #4c5670; }
+    .field-input:hover { border-color: #35405e; }
+    .field-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--surface-2);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+ 
+    .field-error {
+      font-size: 12.5px;
+      color: var(--danger);
+      margin-top: 6px;
+    }
+ 
+    .form-alert {
+      background: rgba(243, 113, 107, 0.1);
+      border: 1px solid rgba(243, 113, 107, 0.3);
+      color: #ffb3af;
+      font-size: 13.5px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+ 
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: #1a1204;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: filter 0.15s ease, transform 0.05s ease;
+    }
+ 
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+ 
+  <div class="auth-shell">
+ 
+    <!-- Left: live price console (signature element) -->
+    <div class="auth-console">
+      <div class="brand">
+        <span class="brand-mark">⛽</span>
+        LitreVault
+      </div>
+ 
+      <div class="console-board">
+        <div class="console-eyebrow">Current pump price</div>
+ 
+        <div class="console-price">
+          <span>₦</span>
+          <span class="console-digit">1</span><span class="console-digit">,</span><span class="console-digit">0</span><span class="console-digit">5</span><span class="console-digit">0</span>
+          <span class="unit">/ litre</span>
+        </div>
+ 
+        <div class="console-delta">▲ up ₦70 since Aug 14</div>
+ 
+        <svg class="console-sparkline" viewBox="0 0 320 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <polyline points="0,38 80,26 160,20 240,14 320,4"
+                    stroke="#ffb020" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="320" cy="4" r="4" fill="#ffb020"/>
+        </svg>
+ 
+        <div class="console-history">
+          <span>Aug 1 <b>₦920</b></span>
+          <span>Aug 8 <b>₦950</b></span>
+          <span>Aug 14 <b>₦980</b></span>
+          <span>Aug 20 <b>₦1,050</b></span>
+        </div>
+      </div>
+ 
+      <p class="console-foot">
+        Every price change is logged, never overwritten — sign in to track your litres, purchases, and wallet balance over time.
+      </p>
+    </div>
+ 
+    <!-- Right: login form -->
+    <div class="auth-panel">
+      <div class="auth-card">
+        <h1 class="auth-heading">Welcome back</h1>
+        <p class="auth-sub">
+          New to LitreVault? <a href="/register">Create an account</a>
+        </p>
+ 
+        <!-- {% if form.non_field_errors %}
+          <div class="form-alert">{{ form.non_field_errors.0 }}</div>
+        {% endif %} -->
+ 
+        <form method="post" action="/login/" id="loginForm" novalidate>
+          {% csrf_token %}
+ 
+          <div class="field-group">
+            <label class="field-label" for="id_username">Username</label>
+            <input
+              class="field-input"
+              type="text"
+              id="id_username"
+              name="username"
+              placeholder="e.g. tunde"
+              autocomplete="username"
+              required
+              autofocus
+            >
+          </div>
+ 
+          <div class="field-group">
+            <label class="field-label" for="id_password">Password</label>
+            <input
+              class="field-input"
+              type="password"
+              id="id_password"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            >
+            {% if error %}
+              <div class="field-error">{{error}}</div>
+            {% endif %}
+          </div>
+ 
+          <button type="submit" class="btn-primary" id="loginSubmit">Sign in</button>
+        </form>
+ 
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <script>
+    // Basic client-side functionality:
+    // 1. Prevents empty submissions from reaching the server (Django still re-validates too)
+    // 2. Disables the button + shows a pending state after a valid submit, so users
+    //    don't double-click and send two login requests
+    (function () {
+      var form = document.getElementById('loginForm');
+      var submitBtn = document.getElementById('loginSubmit');
+ 
+      form.addEventListener('submit', function (e) {
+        var username = document.getElementById('id_username').value.trim();
+        var password = document.getElementById('id_password').value;
+ 
+        if (!username || !password) {
+          e.preventDefault();
+          return;
+        }
+ 
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in…';
+      });
+    })();
+  </script>
+ 
+</body>
+</html>
+ 

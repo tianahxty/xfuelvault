@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LitreVault — {{ error_code|default:"Error" }}</title>
+   <link rel="stylesheet" href="{% static 'css/app.css'%}" />
+</head>
+<body>
+  <div class="app no-shell" style="min-height:100vh;display:flex;flex-direction:column">
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+            <path d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"></path>
+          </svg>
+        </div>
+        <span class="brand-name">LitreVault</span>
+      </div>
+    </div>
+
+    <div class="content" style="padding:0 22px;flex:1;display:flex;align-items:center;justify-content:center">
+      <div class="error-screen" data-error-screen style="text-align:center;max-width:360px">
+
+        <div style="width:66px;height:66px;border-radius:50%;background:var(--amber-100,#fdf3dc);color:var(--amber-700,#b7791f);display:flex;align-items:center;justify-content:center;margin:0 auto">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3.5 21.5 20h-19L12 3.5Z"></path>
+            <path d="M12 10v4.5"></path>
+            <path d="M12 17.2h.01"></path>
+          </svg>
+        </div>
+
+        <div class="mono" style="margin-top:18px;color:var(--ink-faint);font-size:12px;letter-spacing:.04em">
+          ERROR {{ error_code|default:"500" }}
+        </div>
+        <h1 style="font-size:20px;margin-top:6px">{{ error_title|default:"Something went wrong" }}</h1>
+        <p style="font-size:13px;color:var(--ink-soft);margin-top:4px">
+          {{ error_message|default:"We hit a snag loading this page. Your litres and wallet balance are safe — try again in a moment." }}
+        </p>
+        <p> {{ error }} </p>
+
+        <div class="gauge dark" style="justify-content:center;margin-top:22px">
+          <i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i><i style="height:12px"></i><i style="height:14px"></i><i style="height:16px"></i><i style="height:14px"></i><i style="height:12px"></i><i style="height:16px"></i><i style="height:10px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:9px"></i><i style="height:12px"></i>
+        </div>
+
+        <a class="btn btn-primary" href="/userdashboard/" style="margin-top:26px;display:inline-block">Back to Dashboard</a>
+        <a class="btn btn-secondary" href="javascript:location.reload()" style="margin-top:10px;display:inline-block">Try Again</a>
+
+      </div>
+    </div>
+
+  </div>
+
+ 
+</body>
+</html>

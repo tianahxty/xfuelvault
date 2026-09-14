@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LitreVault — Purchase Failed</title>
+   <link rel="stylesheet" href="{% static 'css/app.css'%}" />
+</head>
+<body class="">
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+            <path d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"></path>
+          </svg>
+        </div>
+        <span class="brand-name">LitreVault</span>
+      </div>
+      <nav class="side-nav">
+        <a class="side-link" href="/userdashboard/">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11.5 12 4l8 7.5"></path>
+            <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"></path>
+          </svg><span>Dashboard</span>
+        </a>
+        <a class="side-link" href="/litrelots/">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"></path>
+          </svg><span>My Litres</span>
+        </a>
+        <a class="side-link active" href="/buylitre/">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 8v8M8 12h8"></path>
+          </svg><span>Buy Litres</span>
+        </a>
+        <a class="side-link" href="/buylitre/">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect>
+            <rect x="13.5" y="3.5" width="7" height="7" rx="1"></rect>
+            <rect x="3.5" y="13.5" width="7" height="7" rx="1"></rect>
+            <path d="M14 14h2.5v2.5H14zM19 14h1.5M19 19h1.5M14 19h1"></path>
+          </svg><span>Redeem</span>
+        </a>
+        <a class="side-link" href="#">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v5l3.5 2"></path>
+          </svg><span>Transactions</span>
+        </a>
+        <a class="side-link" href="#">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 17l6-6 4 4 8-8"></path>
+            <path d="M15 7h6v6"></path>
+          </svg><span>Price History</span>
+        </a>
+        <a class="side-link" href="#" aria-disabled="true" title="Coming soon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8.5" r="3.5"></circle>
+            <path d="M4.5 20c1.3-4 4-6 7.5-6s6.2 2 7.5 6"></path>
+          </svg><span>Profile</span>
+        </a>
+      </nav>
+      <div class="side-foot">
+        <div class="side-user">
+          <div class="side-avatar">{{ request.user.username|slice:":1" }}</div>
+          <div>
+            <div style="font-weight:600">{{ request.user.username }}</div>
+            <div class="mono" style="color:var(--ink-faint);font-size:11px">
+              Litres: {{ request.user.wallet_balance|floatformat:3 }}L
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div>
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+              <path d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"></path>
+            </svg>
+          </div>
+          <span class="brand-name">LitreVault</span>
+        </div>
+        <button type="button" class="icon-btn" aria-label="Notifications">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z"></path>
+            <path d="M10 20a2 2 0 0 0 4 0"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="app no-shell">
+        <div class="content" style="padding:0 22px">
+          <div class="failure-screen" data-purchase-failure style="padding-top:56px;text-align:center">
+
+            <div style="width:66px;height:66px;border-radius:50%;background:var(--red-100,#fdecec);color:var(--red-700,#c0392b);display:flex;align-items:center;justify-content:center;margin:0 auto">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M9.5 9.5l5 5M14.5 9.5l-5 5"></path>
+              </svg>
+            </div>
+
+            <h1 style="font-size:20px;margin-top:18px">Purchase failed</h1>
+            <p style="font-size:13px;color:var(--ink-soft);margin-top:4px">
+              We couldn't complete your purchase of <span data-result-litres>{{ litres_requested|floatformat:3 }}</span>L. No litres were added and you have not been charged.
+            </p>
+
+            <div class="card" style="margin-top:24px;text-align:left">
+              <div class="price-row">
+                <span style="font-size:13px;color:var(--ink-soft)">Attempted price</span>
+                <span class="mono" style="font-weight:500">₦<span data-result-price>{{ locked_price }}</span>/L</span>
+              </div>
+              <div class="divider"></div>
+              <div class="price-row">
+                <span style="font-size:13px;color:var(--ink-soft)">Amount</span>
+                <span class="mono" style="font-weight:500">₦<span data-result-amount>{{ amount|floatformat:2 }}</span></span>
+              </div>
+              <div class="divider"></div>
+              <div class="price-row">
+                <span style="font-size:13px;color:var(--ink-soft)">Reason</span>
+                <span style="font-weight:500;font-size:13px;color:var(--red-700,#c0392b)" data-result-reason>{{ failure_reason|default:"Payment declined by provider" }}</span>
+              </div>
+              <div class="divider"></div>
+              <div class="price-row">
+                <span style="font-size:13px;color:var(--ink-soft)">Payment reference</span>
+                <span class="mono" style="font-weight:500;font-size:12.5px" data-result-reference>{{ payment_reference }}</span>
+              </div>
+            </div>
+
+            <a class="btn btn-primary" href="/buylitre/" style="margin-top:26px">Try Again</a>
+            <a class="btn btn-secondary" href="/userdashboard/" style="margin-top:10px">Back to Dashboard</a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <nav class="bottomnav">
+    <a class="nav-item" href="/userdashboard/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 11.5 12 4l8 7.5"></path>
+        <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"></path>
+      </svg><span>Home</span>
+    </a>
+    <a class="nav-item" href="/litrelots/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"></path>
+      </svg><span>My Litres</span>
+    </a>
+    <a class="nav-item" href="/buylitre/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 8v8M8 12h8"></path>
+      </svg><span>Buy</span>
+    </a>
+    <a class="nav-item" href="/buylitre/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect>
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1"></rect>
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1"></rect>
+        <path d="M14 14h2.5v2.5H14zM19 14h1.5M19 19h1.5M14 19h1"></path>
+      </svg><span>Redeem</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 7v5l3.5 2"></path>
+      </svg><span>History</span>
+    </a>
+  </nav>
+
+  <script src="/static/js/app.js" defer></script>
+</body>
+</html>

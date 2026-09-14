@@ -1,0 +1,294 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LitreVault — Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/app.css'%}" />
+    {% block css %} {% endblock %}
+  </head>
+  <body class="">
+    <div class="app">
+      {% comment %} {% block sidebar %} {% endcomment %}
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="color: #fff"
+              width="16"
+              height="16"
+            >
+              <path
+                d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"
+              />
+            </svg>
+          </div>
+          <span class="brand-name">LitreVault</span>
+        </div>
+        <nav class="side-nav">
+          <a class="side-link active" href="/userdashboard/"
+            ><svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 11.5 12 4l8 7.5" />
+              <path
+                d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"
+              /></svg
+            ><span>Dashboard</span></a
+          ><a class="side-link" href="/litrelots/"
+            ><svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"
+              /></svg
+            ><span>My Litres</span></a
+          ><a class="side-link" href="/buylitre/"
+            ><svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 8v8M8 12h8" /></svg
+            ><span>Buy Litres</span></a
+          ><a class="side-link" href="/redeemfuel/"
+            ><svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3.5" y="3.5" width="7" height="7" rx="1" />
+              <rect x="13.5" y="3.5" width="7" height="7" rx="1" />
+              <rect x="3.5" y="13.5" width="7" height="7" rx="1" />
+              <path d="M14 14h2.5v2.5H14zM19 14h1.5M19 19h1.5M14 19h1" /></svg
+            ><span>Redeem</span></a
+          ><a class="side-link" href="#"
+            ><svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3.5 2" /></svg
+            ><span>Transactions</span></a
+          ><a class="side-link" href="#"
+            ><svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 17l6-6 4 4 8-8" />
+              <path d="M15 7h6v6" /></svg
+            ><span>Price History</span></a
+          ><a
+            class="side-link"
+            href="#"
+            aria-disabled="true"
+            title="Coming soon"
+            ><svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="8.5" r="3.5" />
+              <path d="M4.5 20c1.3-4 4-6 7.5-6s6.2 2 7.5 6" /></svg
+            ><span>Profile</span></a
+          >
+        </nav>
+        <div class="side-foot">
+          <div class="side-user">
+            <div class="side-avatar">
+              {{ user.full_name|default:user.username }}
+            </div>
+            <div>
+              <div style="font-weight: 600">
+                {{ user.full_name|default:user.username }}
+              </div>
+              <div
+                class="mono"
+                style="color: var(--ink-faint); font-size: 11px"
+              >
+                Litres: 45.500L
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      {% comment %} {% endblock %} {% endcomment %}
+
+      <div>
+        <div class="topbar">
+          <div class="brand">
+            <div class="brand-mark">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="color: #fff"
+                width="16"
+                height="16"
+              >
+                <path
+                  d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"
+                />
+              </svg>
+            </div>
+            <span class="brand-name">LitreVault</span>
+          </div>
+          <button type="button" class="icon-btn" aria-label="Notifications">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z" />
+              <path d="M10 20a2 2 0 0 0 4 0" />
+            </svg>
+          </button>
+        </div>
+
+        {% block main-content %} {% endblock %}
+      </div>
+    </div>
+
+    {% block bottomnav %}
+    <nav class="bottomnav">
+      <a class="nav-item" href="/userdashboard/"
+        ><svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M4 11.5 12 4l8 7.5" />
+          <path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9" /></svg
+        ><span>Home</span></a
+      ><a class="nav-item" href="/litrelots/"
+        ><svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M12 3c3.6 4.2 6 7.6 6 10.5A6 6 0 1 1 6 13.5C6 10.6 8.4 7.2 12 3Z"
+          /></svg
+        ><span>My Litres</span></a
+      ><a class="nav-item" href="/buylitre/"
+        ><svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v8M8 12h8" /></svg
+        ><span>Buy</span></a
+      ><a class="nav-item" href="/buylitre/"
+        ><svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1" />
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1" />
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1" />
+          <path d="M14 14h2.5v2.5H14zM19 14h1.5M19 19h1.5M14 19h1" /></svg
+        ><span>Redeem</span></a
+      ><a class="nav-item" href="15-transaction-history.html"
+        ><svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3.5 2" /></svg
+        ><span>History</span></a
+      >
+    </nav>
+    {% endblock %}
+
+    <script src="{% static 'js/app.js'%}" defer></script>
+  </body>
+</html>

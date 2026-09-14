@@ -1,0 +1,137 @@
+
+<div class="auth-panel">
+    <div class="auth-card">
+        <h1 class="auth-heading">Create your account</h1>
+        <p class="auth-sub">
+        Already have one? <a href="/login">Sign in</a>
+        </p>
+
+        <!-- {% if form.non_field_errors %}
+        <div class="form-alert">{{ form.non_field_errors.0 }}</div>
+        {% endif %} -->
+
+        <form method="post" action="/registerTest/" id="registerForm" novalidate>
+        {% csrf_token %}
+
+        <div class="field-group">
+            <label class="field-label" for="id_username">Username</label>
+            <input
+            class="field-input"
+            type="text"
+            id="id_username"
+            name="username"
+            placeholder="e.g. Christy"
+            autocomplete="username"
+            required
+            autofocus
+            >
+        {% if error3 %}
+            <div class="field-error">{{ error3 }}</div>
+            {% endif %}
+
+            {% if success %}
+            <div class="field-success">{{ success }}</div>
+            {% endif %}
+        </div>
+
+        <div class="field-group">
+            <label class="field-label" for="id_email">Email</label>
+            <input
+            class="field-input"
+            type="email"
+            id="id_email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            >
+            {% if error %}
+            <div class="field-error">{{ error }}</div>
+            {% endif %}
+
+            {% if success %}
+            <div class="field-success">{{ success }}</div>
+            {% endif %}
+        </div>
+        <div class="field-group">
+            <label class="field-label" for="id_email">First name</label>
+            <input
+            class="field-input"
+            type="name"
+            {% comment %} id="id_email" {% endcomment %}
+            name="firstname"
+            required
+            >
+            {% if error %}
+            <div class="field-error">{{ error }}</div>
+            {% endif %}
+
+            {% if success %}
+            <div class="field-success">{{ success }}</div>
+            {% endif %}
+        </div>
+
+        <div class="field-group">
+            <label class="field-label" for="id_email">Last name</label>
+            <input
+            class="field-input"
+            type="name"
+            {% comment %} id="id_email" {% endcomment %}
+            name="lastname"
+            required
+            >
+            {% if error %}
+            <div class="field-error">{{ error }}</div>
+            {% endif %}
+
+            {% if success %}
+            <div class="field-success">{{ success }}</div>
+            {% endif %}
+        </div>
+
+        <div class="field-row">
+            <div class="field-group">
+            <label class="field-label" for="id_password1">Password</label>
+            <input
+                class="field-input"
+                type="password"
+                id="id_password1"
+                name="password1"
+                placeholder="••••••••"
+                autocomplete="new-password"
+                required
+                minlength="8"
+            >
+            {% if error1 %}
+            <div class="field-error">{{ error1 }}</div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="field-success">{{ success }}</div>
+            {% endif %}
+            </div>
+
+            <div class="field-group">
+            <label class="field-label" for="id_password2">Confirm</label>
+            <input
+                class="field-input"
+                type="password"
+                id="id_password2"
+                name="password2"
+                placeholder="••••••••"
+                autocomplete="new-password"
+                required
+            >
+            {% if error2 %}
+            <div class="field-error">{{ error2 }}</div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="field-success">{{ success }}</div>
+            {% endif %}
+            </div>
+        </div>
+        <div class="field-hint" id="matchHint">At least 8 characters. Avoid common passwords.</div>
+
+        <button type="submit" class="btn-primary" id="registerSubmit" style="margin-top: 18px;">Create account</button>
+        </form>

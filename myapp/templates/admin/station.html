@@ -1,0 +1,328 @@
+
+{% extends 'admin/master.html' %}
+{% block content %}
+    <!-- MAIN -->
+<main class="main-content">
+ 
+    <!--
+        CHANGE 1 — hidden "action" field added to this form.
+ 
+        Your view will now receive multiple kinds of POST requests from this
+        page: creating a station (this form) AND toggling a station active/
+        inactive (a separate form added further down, in the table).
+ 
+        Both forms POST to the same URL, so the view needs a way to tell them
+        apart. Adding name="action" value="create" here lets your view do:
+ 
+            if request.POST.get('action') == 'create': ...
+            elif request.POST.get('action') == 'toggle': ...
+    -->
+    <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="create">
+ 
+        <div class="station-heading">
+ 
+            <div>
+                <small>NETWORK</small>
+                <h1>Stations</h1>
+            </div>
+ 
+            <button type="submit" class="add-button">
+                <span>+</span>
+                Add Station
+            </button>
+ 
+        </div>
+ 
+ 
+        <!-- STATION FORM -->
+ 
+        <section class="station-form card">
+ 
+            <label for="station-name">
+                Station name
+            </label>
+ 
+            <input
+                type="text"
+                id="station-name"
+                name ="name"
+                required
+            >
+             {% if error1 %}
+                    <div class="warning">
+                        <span>⚠️</span>
+                        <p>{{ error1 }}</p>
+                    </div>
+                    {% endif %}
+                    {% if success %}
+                    <div class="warning" style="background-color: #7fff19; color: white !important;">
+                        <p>{{ success }}</p>
+                    </div>
+                    {% endif %}
+ 
+        </section>
+ 
+ 
+        <div class="station-details">
+ 
+            <div class="detail-card card">
+ 
+                <small>ADDRESS</small>
+ 
+                 <input style="width: 21rem; padding: 2px 40px; border-width: 0.5px; border-radius: 3px "
+                type="text"
+                id="station-name"
+                name ="address"
+                required
+            >
+            </div>
+ 
+ 
+            <div class="detail-card card">
+ 
+                <small>STATION CODE</small>
+ 
+                <input style="width: 21rem; padding: 2px 40px; border-width: 0.5px; border-radius: 3px "
+                type="text"
+                id="station-name"
+                name ="code"
+                required
+            >
+                 {% if error3 %}
+                    <div class="warning">
+                        <span>⚠️</span>
+                        <p>{{ error3 }}</p>
+                    </div>
+                    {% endif %}
+ 
+            </div>
+ 
+        </div>
+ 
+    <!--
+        CHANGE 2 — the create-station form now closes HERE, right after the
+        fields it actually needs (name, address, code).
+ 
+        In your original file, this </form> tag was down at the very bottom,
+        which meant the ENTIRE stations table — including every row's Edit
+        and Delete buttons, and now the new toggle switches — was sitting
+        INSIDE the create-station <form>.
+ 
+        That's invalid HTML: a <form> can never contain another <form>
+        (browsers will silently drop or misplace nested forms, which causes
+        exactly the kind of "button does something weird" bugs that are hard
+        to trace). It also meant clicking Edit/Delete on any row would have
+        submitted the outer form too — potentially trying to create a new,
+        blank station at the same time you were trying to edit or delete one.
+ 
+        Closing the form here keeps it scoped to only the 3 fields it's
+        actually meant to submit.
+    -->
+    </form>
+ 
+        <!-- STATIONS TABLE -->
+        <section class="all-stations">
+ 
+            <h2>All stations</h2>
+ 
+            <div class="stations-table">
+ 
+                <div class="stations-header">
+                    <span>NAME</span>
+                    <span>ADDRESS</span>
+                    <span>CODE</span>
+                    <span>CREATED AT</span>
+                    <!--
+                        CHANGE 3 — new STATUS column header, for the
+                        active/inactive toggle switch added below.
+                    -->
+                    <span>STATUS</span>
+                    <span></span>
+                </div>
+ 
+               
+                {% for stations in station_history %}
+                <div class="station-row">
+ 
+                    <span class="station-name">
+                        {{ stations.name }}
+                    </span>
+ 
+                    <span>
+                        {{ stations.address }}
+                    </span>
+ 
+                    <span>
+                        {{ stations.code }}
+                    </span>
+ 
+                    <span>
+                        {{ stations.created_at }}
+                    </span>
+ 
+                    <!--
+                        CHANGE 5 — the actual active/inactive toggle.
+ 
+                        This is its OWN small <form>, separate from the
+                        create-station form above (now that nesting is fixed,
+                        this is valid HTML). It posts just two things:
+                        action=toggle, and this row's station_id — so the
+                        view knows exactly which station to flip.
+ 
+                        The checkbox's checked state reads {{ stations.is_active }}
+                        directly from the database, so the switch always shows
+                        the station's REAL current status on page load, not
+                        just whatever was last clicked.
+ 
+                        data-toggle-name / data-toggle-state are read by the
+                        JavaScript below (for the confirm() message and to
+                        know which direction the switch is flipping).
+                    -->
+                    <span class="status-cell">
+                        <form method="post" class="toggle-switch-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="toggle">
+                            <input type="hidden" name="station_id" value="{{ stations.id }}">
+                            <label class="toggle-switch">
+                                <input
+                                    type="checkbox"
+                                    class="toggle-switch-input"
+                                    {% if stations.is_active %}checked{% endif %}
+                                    data-toggle-name="{{ stations.name }}"
+                                    data-toggle-state="{{ stations.is_active|yesno:'active,inactive' }}"
+                                >
+                                <span class="toggle-switch-track">
+                                    <span class="toggle-switch-thumb"></span>
+                                </span>
+                            </label>
+                        </form>
+                    </span>
+ 
+                   
+ 
+                </div>
+                {% endfor %}
+ 
+            </div>
+ 
+        </section>
+</main>
+ 
+<!--
+    CHANGE 6 — inline styling for the toggle switch, as requested.
+ 
+    Scoped only to .toggle-switch* classes so it won't collide with anything
+    already defined in your master.html / linked stylesheet.
+-->
+<style>
+    .toggle-switch-form {
+        margin: 0;
+        display: inline-block;
+    }
+ 
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 24px;
+        cursor: pointer;
+    }
+ 
+    .toggle-switch-input {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        cursor: pointer;
+        z-index: 1;
+    }
+ 
+    .toggle-switch-track {
+        position: absolute;
+        inset: 0;
+        background: #d9dde3;
+        border: 1px solid #c3c9d3;
+        border-radius: 999px;
+        transition: background 0.18s ease, border-color 0.18s ease;
+    }
+ 
+    .toggle-switch-thumb {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 18px;
+        height: 18px;
+        background: #8a93a3;
+        border-radius: 50%;
+        transition: transform 0.18s ease, background 0.18s ease;
+    }
+ 
+    /* When the checkbox is checked (station is active), slide the thumb
+       right and switch the track/thumb to a green "on" color. */
+    .toggle-switch-input:checked ~ .toggle-switch-track {
+        background: #d6f5e3;
+        border-color: #34d399;
+    }
+ 
+    .toggle-switch-input:checked ~ .toggle-switch-track .toggle-switch-thumb {
+        transform: translateX(18px);
+        background: #34d399;
+    }
+ 
+    .toggle-switch-input:focus-visible ~ .toggle-switch-track {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+    }
+ 
+    .toggle-switch-input:disabled ~ .toggle-switch-track {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+ 
+    .status-cell {
+        display: flex;
+        align-items: center;
+    }
+</style>
+ 
+<!--
+    CHANGE 7 — JavaScript to actually submit the toggle when clicked, with a
+    confirmation before deactivating.
+ 
+    Why "change" and not "submit": flipping the switch IS the action here —
+    there's no separate "Save" button for it. Listening for the checkbox's
+    change event fires the instant the admin clicks it, and form.submit()
+    is what sends the POST request built above.
+ 
+    Why the checked-state reset on cancel: clicking a checkbox flips its
+    checked value BEFORE this handler runs. So if the admin cancels the
+    confirm() dialog, we have to manually set it back — otherwise the switch
+    would visually show "off" even though nothing was actually submitted.
+-->
+<script>
+    document.querySelectorAll('.toggle-switch-input').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            var form = checkbox.closest('form');
+            var wasActive = checkbox.dataset.toggleState === 'active';
+ 
+            if (wasActive) {
+                var ok = confirm('Deactivate "' + checkbox.dataset.toggleName + '"?');
+                if (!ok) {
+                    checkbox.checked = true;
+                    return;
+                }
+            }
+ 
+            checkbox.disabled = true;
+            form.submit();
+        });
+    });
+</script>
+ 
+{% endblock %}
+ 
+
+Explain

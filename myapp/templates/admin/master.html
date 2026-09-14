@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiteVault Admin - Price Management</title>
+</head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f1eb;
+    color: #17201d;
+    min-height: 100vh;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* ================================
+   DASHBOARD
+================================ */
+
+.dashboard {
+    width: min(94%, 1150px);
+    min-height: 94vh;
+    margin: 20px auto;
+
+    background: white;
+
+    border-radius: 24px;
+    overflow: hidden;
+
+    display: flex;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ================================
+   SIDEBAR
+================================ */
+
+.sidebar {
+    width: 205px;
+    min-width: 205px;
+
+    background: #f7f7f3;
+
+    border-right: 1px solid #e5e5df;
+
+    padding: 25px 14px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* LOGO */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 0 4px;
+
+    margin-bottom: 28px;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.logo-icon {
+    width: 23px;
+    height: 23px;
+
+    background: #064c3a;
+    color: white;
+
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+}
+
+
+/* NAVIGATION */
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nav-item {
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 0 10px;
+
+    border-radius: 8px;
+
+    color: #525954;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    transition: 0.2s;
+}
+
+.nav-item:hover {
+    background: #e8eee9;
+}
+
+.nav-item span:first-child {
+    width: 15px;
+    text-align: center;
+}
+
+.nav-item.active {
+    background: #064c3a;
+    color: white;
+}
+
+
+/* ADMIN ACCOUNT */
+
+.admin-account {
+    margin-top: auto;
+
+    border-top: 1px solid #e5e5df;
+
+    padding: 14px 4px 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.admin-icon {
+    width: 25px;
+    height: 25px;
+
+    border-radius: 50%;
+
+    background: #e0eee8;
+    color: #0a604b;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 8px;
+    font-weight: bold;
+}
+
+.admin-account strong {
+    display: block;
+    font-size: 10px;
+}
+
+.admin-account small {
+    color: #9a9d99;
+    font-size: 8px;
+}
+
+
+/* ================================
+   MAIN CONTENT
+================================ */
+
+.main-content {
+    flex: 1;
+
+    padding: 34px 78px 50px;
+
+    min-width: 0;
+}
+
+
+/* PAGE HEADING */
+
+.page-heading small,
+.station-heading small {
+    display: block;
+
+    color: #a2a49e;
+
+    font-size: 8px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 5px;
+}
+
+.page-heading h1,
+.station-heading h1 {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* ================================
+   PRICE PAGE
+================================ */
+
+.price-layout {
+    margin-top: 25px;
+
+    display: grid;
+
+    grid-template-columns: 325px 235px;
+
+    gap: 18px;
+}
+
+
+/* CARDS */
+
+.card {
+    background: white;
+
+    border: 1px solid #e5e5e1;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.035);
+}
+
+
+/* CURRENT PRICE */
+
+.current-price {
+    padding: 17px;
+
+    height: 110px;
+}
+
+.current-price small,
+.new-price small,
+.detail-card small {
+    display: block;
+
+    font-size: 8px;
+
+    letter-spacing: 1.5px;
+
+    color: #a3a59f;
+
+    margin-bottom: 9px;
+}
+
+.price {
+    font-size: 27px;
+    font-weight: 500;
+
+    color: #111816;
+}
+
+.price span {
+    font-size: 12px;
+    color: #777b76;
+}
+
+.current-price p {
+    font-size: 8px;
+    color: #999d98;
+
+    margin-top: 6px;
+}
+
+
+/* NEW PRICE */
+
+.new-price {
+    margin-top: 12px;
+
+    padding: 17px;
+}
+
+.new-price label,
+.station-form label {
+    display: block;
+
+    font-size: 10px;
+
+    color: #626862;
+
+    margin-bottom: 7px;
+}
+
+.new-price input,
+.station-form input {
+    width: 100%;
+
+    height: 37px;
+
+    border: 1px solid #e2e2df;
+
+    border-radius: 8px;
+
+    padding: 0 12px;
+
+    outline: none;
+
+    font-size: 11px;
+
+    color: #3b403d;
+
+    margin-bottom: 13px;
+}
+
+.new-price input:focus,
+.station-form input:focus {
+    border-color: #0a5a45;
+}
+
+
+/* WARNING */
+
+.warning {
+    background: #fff1d9;
+
+    border-radius: 9px;
+
+    padding: 10px;
+
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 1px;
+}
+
+.warning span {
+    color: #9a722f;
+    font-size: 12px;
+}
+
+.warning p {
+    font-size: 8px;
+
+    line-height: 1.5;
+
+    color: #806c4b;
+}
+
+
+/* BUTTON */
+
+.primary-button {
+    width: 100%;
+
+    height: 38px;
+
+    margin-top: 11px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #064c3a;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.primary-button:hover {
+    background: #08624a;
+}
+
+
+/* ================================
+   PRICE HISTORY
+================================ */
+
+.history h2,
+.all-stations h2 {
+    font-size: 12px;
+
+    margin-bottom: 9px;
+}
+
+.history-table {
+    border: 1px solid #e5e5e1;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.history-header,
+.history-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1.3fr;
+}
+
+.history-header {
+    min-height: 30px;
+
+    background: #fafaf8;
+
+    align-items: center;
+
+    padding: 0 10px;
+}
+
+.history-header span {
+    font-size: 7px;
+
+    color: #999d98;
+
+    font-weight: 500;
+}
+
+.history-row {
+    min-height: 57px;
+
+    padding: 8px 10px;
+
+    align-items: center;
+
+    border-top: 1px solid #eeeeea;
+}
+
+.history-row span {
+    font-size: 8px;
+
+    line-height: 1.5;
+
+    color: #343936;
+}
+
+.history-note {
+    color: #9c9f9a;
+
+    font-size: 8px;
+
+    line-height: 1.4;
+
+    margin-top: 8px;
+}
+
+
+/* ================================
+   STATIONS PAGE
+================================ */
+
+.station-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+/* ADD STATION BUTTON */
+
+.add-button {
+    border: none;
+
+    background: #064c3a;
+
+    color: white;
+
+    height: 37px;
+
+    padding: 0 17px;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+.add-button span {
+    font-size: 17px;
+
+    margin-right: 5px;
+
+    vertical-align: middle;
+}
+
+
+/* STATION FORM */
+
+.station-form {
+    margin-top: 22px;
+
+    padding: 15px 17px;
+}
+
+.station-form input {
+    margin: 0;
+
+    height: 36px;
+}
+
+
+/* DETAILS */
+
+.station-details {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.detail-card {
+    padding: 14px 17px;
+
+    min-height: 61px;
+}
+
+.detail-card small {
+    margin-bottom: 7px;
+}
+
+.detail-card p {
+    font-size: 10px;
+
+    color: #444a46;
+}
+
+
+/* STATIONS TABLE */
+
+.all-stations {
+    margin-top: 22px;
+}
+
+.stations-table {
+    border: 1px solid #e5e5e1;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.stations-header,
+.station-row {
+    display: grid;
+
+    grid-template-columns:
+        1.4fr
+        1.8fr
+        0.9fr
+        0.7fr
+        0.55fr;
+
+    align-items: center;
+}
+
+.stations-header {
+    min-height: 31px;
+
+    padding: 0 10px;
+
+    background: #fafaf8;
+}
+
+.stations-header span {
+    font-size: 7px;
+
+    color: #999d98;
+}
+
+.station-row {
+    min-height: 45px;
+
+    padding: 0 10px;
+
+    border-top: 1px solid #eeeeea;
+}
+
+.station-row > span {
+    font-size: 8px;
+
+    color: #444945;
+
+    padding-right: 7px;
+}
+
+.station-name {
+    font-weight: 600;
+    color: #252b28 !important;
+}
+
+
+/* STATUS */
+
+.status {
+    display: inline-block;
+
+    padding: 4px 7px;
+
+    border-radius: 10px;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+.active-status {
+    background: #e4f2e9;
+
+    color: #28724f;
+}
+
+.inactive-status {
+    background: #eeeeea;
+
+    color: #777a74;
+}
+
+
+/* ACTION BUTTONS */
+
+.actions {
+    display: flex;
+
+    gap: 5px;
+
+    justify-content: flex-end;
+}
+
+.actions button {
+    width: 26px;
+    height: 26px;
+
+    border: 1px solid #e3e3df;
+
+    background: white;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    color: #414742;
+}
+
+.actions button:hover {
+    background: #f2f5f2;
+}
+
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 950px) {
+
+    .dashboard {
+        width: 96%;
+    }
+
+    .sidebar {
+        width: 180px;
+        min-width: 180px;
+    }
+
+    .main-content {
+        padding: 30px 35px;
+    }
+
+    .price-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .history {
+        max-width: 100%;
+    }
+
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 700px) {
+
+    body {
+        background: white;
+    }
+
+    .dashboard {
+        width: 100%;
+        min-height: 100vh;
+
+        margin: 0;
+
+        border-radius: 0;
+
+        display: block;
+
+        box-shadow: none;
+    }
+
+
+    /* SIDEBAR BECOMES TOP NAV */
+
+    .sidebar {
+        width: 100%;
+        min-width: 0;
+
+        padding: 15px;
+
+        border-right: none;
+
+        border-bottom: 1px solid #e5e5df;
+
+        display: block;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .nav-menu {
+        display: flex;
+
+        flex-direction: row;
+
+        overflow-x: auto;
+
+        gap: 5px;
+
+        padding-bottom: 3px;
+    }
+
+    .nav-item {
+        flex-shrink: 0;
+
+        padding: 0 12px;
+
+        white-space: nowrap;
+    }
+
+    .admin-account {
+        display: none;
+    }
+
+
+    /* MAIN */
+
+    .main-content {
+        padding: 25px 18px 40px;
+    }
+
+
+    /* PRICE PAGE */
+
+    .price-layout {
+        display: block;
+
+        margin-top: 20px;
+    }
+
+    .price-left {
+        width: 100%;
+    }
+
+    .current-price {
+        height: auto;
+
+        min-height: 110px;
+    }
+
+    .new-price {
+        margin-top: 15px;
+    }
+
+    .history {
+        margin-top: 25px;
+    }
+
+    .history-table {
+        overflow-x: auto;
+    }
+
+    .history-header,
+    .history-row {
+        min-width: 420px;
+    }
+
+
+    /* STATIONS */
+
+    .station-heading {
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .add-button {
+        flex-shrink: 0;
+    }
+
+    .station-details {
+        grid-template-columns: 1fr;
+    }
+
+    .stations-table {
+        overflow-x: auto;
+    }
+
+    .stations-header,
+    .station-row {
+        min-width: 700px;
+    }
+
+}
+
+
+
+@media (max-width: 450px) {
+
+    .main-content {
+        padding: 22px 13px 35px;
+    }
+
+    .page-heading h1,
+    .station-heading h1 {
+        font-size: 16px;
+    }
+
+    .price {
+        font-size: 25px;
+    }
+
+    .station-heading {
+        flex-direction: column;
+    }
+
+    .add-button {
+        width: 100%;
+    }
+
+    .new-price,
+    .current-price,
+    .station-form,
+    .detail-card {
+        border-radius: 11px;
+    }
+
+}
+</style>
+<body>
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">◊</div>
+            <span>LiteVault Admin</span>
+        </div>
+
+        <nav class="nav-menu">
+
+            <a href="index.html" class="nav-item">
+                <span>⌘</span>
+                <span>Overview</span>
+            </a>
+
+            <a href="/staff/pricemanage/" class="nav-item ">
+                <span>⌁</span>
+                <span>Price Management</span>
+            </a>
+
+            <a href="/staff/station/" class="nav-item">
+                <span>▣</span>
+                <span>Stations</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span>♢</span>
+                <span>Litre Validity</span>
+            </a>
+
+            <a href="/staff/users" class="nav-item">
+                <span>♧</span>
+                <span>Users</span>
+            </a>
+
+        </nav>
+
+        <div class="admin-account">
+            <div class="admin-icon">AD</div>
+
+            <div>
+                <strong>Admin Console</strong>
+                <small>Administrator</small>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    {% block content %} {% endblock %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "user/base.html" %}
+ 
+{% block main-content %}
+ 
+<div class="app no-shell"><div class="content" style="padding:0 22px">
+    <!--
+        CHANGE: data-countdown-seconds is now calculated server-side from
+        the real qr_expires_at on the redemption, instead of a hardcoded
+        "600". data-expired-redirect now points to the real qr-expired URL
+        for THIS redemption (with its id), instead of a static demo filename
+        that had no way of knowing which redemption expired.
+    -->
+    <div class="qr-screen" data-qr-screen data-countdown-seconds="{{ seconds_remaining }}" data-expired-redirect="{% url 'qr-expired' redemption.id %}" style="padding-top:44px;text-align:center">
+      <div class="eyebrow">Redemption QR</div>
+      <div class="wallet-figure" style="justify-content:center;color:var(--ink);margin-top:6px" data-redemption-litres>{{ redemption.litres_redeemed }}<span class="unit" style="color:var(--ink-faint)">L</span></div>
+      <div style="font-size:13px;color:var(--ink-soft);margin-top:2px" data-redemption-station>{{ redemption.station.name }}</div>
+ 
+      <div class="card" style="margin-top:22px;display:inline-block;padding:22px">
+        <!--
+            CHANGE: the hardcoded placeholder SVG is replaced with a real
+            QR image, embedded directly as base64 PNG data. qrgenerateView
+            now generates this server-side, encoding a full URL to the
+            attendant-confirm page for THIS specific redemption (via its
+            qr_code UUID) — scanning it with a phone camera opens a real,
+            working confirmation link.
+        -->
+        <img
+          src="data:image/png;base64,{{ qr_base64 }}"
+          width="210"
+          height="210"
+          alt="Redemption QR code"
+          style="display:block"
+        >
+      </div>
+ 
+      <div style="margin-top:16px">
+        <div class="eyebrow">Verification code</div>
+        <div class="mono" style="font-size:26px;letter-spacing:0.1em;font-weight:500;margin-top:4px">{{ redemption.verificaton_code }}</div>
+      </div>
+ 
+      <div style="margin-top:18px;display:inline-flex;align-items:center;gap:8px;background:var(--red-100);color:var(--red-700);padding:8px 16px;border-radius:100px;font-family:'IBM Plex Mono';font-weight:500;font-size:14px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg> <span data-countdown-display>10:00</span>
+      </div>
+ 
+      <div class="notice notice-amber" style="margin-top:22px;text-align:left"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg>
+        <div><strong>Show this code to the station attendant.</strong> This QR expires in 10 minutes for your security.</div>
+      </div>
+ 
+      <!--
+          NOTE: this cancel form still posts to the demo "/redemptions/cancel/"
+          endpoint. You didn't ask me to build a cancel view, so I've left it
+          as-is — flag it separately when you want that wired up too.
+      -->
+      <form method="post" action="/redemptions/cancel/" style="margin-top:18px">
+        {% csrf_token %}
+        <button type="button" class="btn btn-secondary" formaction="/redemptions/cancel/" data-cancel-redemption data-redirect="{% url 'redeem-fuel' %}">Cancel Redemption</button>
+      </form>
+    </div>
+    </div></div>
+ 
+    <!--
+        NEW: this is the piece that was missing — the countdown display
+        and data-expired-redirect attribute existed in the HTML, but
+        nothing was ever reading them or ticking the clock down. This
+        script does exactly that.
+    -->
+    <script>
+      (function () {
+        var screen = document.querySelector('[data-qr-screen]');
+        if (!screen) return;
+ 
+        var secondsLeft = parseInt(screen.dataset.countdownSeconds, 10);
+        var redirectUrl = screen.dataset.expiredRedirect;
+        var display = screen.querySelector('[data-countdown-display]');
+ 
+        // If the QR was already expired by the time this page loaded
+        // (e.g. the user reopened an old tab), skip the countdown and
+        // send them straight to the expired page - no point ticking
+        // down from a negative number.
+        if (isNaN(secondsLeft) || secondsLeft <= 0) {
+          if (redirectUrl) window.location.href = redirectUrl;
+          return;
+        }
+ 
+        function formatTime(totalSeconds) {
+          var minutes = Math.floor(totalSeconds / 60);
+          var seconds = totalSeconds % 60;
+          return minutes + ':' + String(seconds).padStart(2, '0');
+        }
+ 
+        function tick() {
+          if (display) display.textContent = formatTime(secondsLeft);
+ 
+          if (secondsLeft <= 0) {
+            clearInterval(timer);
+            if (redirectUrl) window.location.href = redirectUrl;
+            return;
+          }
+          secondsLeft -= 1;
+        }
+ 
+        tick(); // show the correct time immediately, don't wait a full second
+        var timer = setInterval(tick, 1000);
+      })();
+    </script>
+ 
+    {% endblock  %}

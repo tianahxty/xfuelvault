@@ -1,0 +1,89 @@
+{% extends "user/base.html" %}
+ 
+{% block main-content %}
+ 
+<div class="app no-shell"><div class="content" style="padding:0 22px">
+    <div style="padding-top:30px">
+ 
+      <div class="page-head">
+        <span class="eyebrow">Attendant</span>
+        <h1>Redeem Fuel</h1>
+      </div>
+ 
+      {% if error %}
+      <div class="notice notice-amber" style="margin-top:14px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg>
+        <div>{{ error }}</div>
+      </div>
+      {% endif %}
+ 
+      <div class="section-head" style="margin-top:20px"><h2>Enter verification code</h2></div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">
+          If a customer can't show their QR code, ask for their 6-digit verification code instead.
+        </p>
+ 
+        <form method="post" data-code-form>
+          {% csrf_token %}
+          <input
+            class="input mono"
+            style="width:100%;font-size:22px;letter-spacing:0.15em;text-align:center;padding:14px"
+            type="text"
+            name="verification_code"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="6"
+            placeholder="000000"
+            required
+            autofocus
+          >
+          <button type="submit" class="btn btn-primary" style="margin-top:14px">Look Up Redemption</button>
+        </form>
+      </div>
+ 
+      <div class="section-head"><h2>Your recent redemptions</h2></div>
+      <div class="card-flush" style="padding:6px 16px">
+        {% for redemption in recent_redemptions %}
+        <div class="txn">
+          <div class="txn-icon redeem">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v15"/><path d="M4 11h10M2 21h14"/><path d="M14 8.5 17 11v6.5a1.5 1.5 0 0 0 3 0V10a2 2 0 0 0-.6-1.4L17.5 7"/></svg>
+          </div>
+          <div class="txn-body">
+            <div class="txn-title">{{ redemption.user.get_full_name|default:redemption.user.username }}</div>
+            <div class="txn-sub">{{ redemption.station.name }} · {{ redemption.redeemed_at|date:"M j, g:i A" }}</div>
+          </div>
+          <div class="txn-amt">
+            <div class="txn-litres">−{{ redemption.litres_redeemed }}L</div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="txn">
+          <div class="txn-body">
+            <div class="txn-title">No redemptions confirmed yet</div>
+            <div class="txn-sub">Redemptions you confirm will show up here.</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+ 
+    </div>
+    </div></div>
+ 
+    <!--
+        Small UX touch: numeric-only input as the attendant types, since
+        the verification code is always exactly 6 digits and a phone's
+        numeric keyboard (inputmode="numeric" above) is easy to fat-finger
+        into typing a stray letter via autocomplete/paste.
+    -->
+    <script>
+      (function () {
+        var form = document.querySelector('[data-code-form]');
+        if (!form) return;
+        var input = form.querySelector('input[name="verification_code"]');
+        input.addEventListener('input', function () {
+          input.value = input.value.replace(/[^0-9]/g, '').slice(0, 6);
+        });
+      })();
+    </script>
+ 
+    {% endblock  %}

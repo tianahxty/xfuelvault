@@ -1,0 +1,35 @@
+
+<form method="post" action="/logTest/" id="loginForm" novalidate>
+        {% csrf_token %}
+
+        <div class="field-group">
+            <label class="field-label" for="id_username">Username</label>
+            <input
+            class="field-input"
+            type="text"
+            id="id_username"
+            name="username"
+            placeholder="e.g. Christy"
+            autocomplete="username"
+            required
+            autofocus
+            >
+        </div>
+
+        <div class="field-group">
+            <label class="field-label" for="id_password">Password</label>
+            <input
+            class="field-input"
+            type="password"
+            id="id_password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+            >
+            {% if error %}
+            <div class="field-error">{{error}}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn-primary" id="loginSubmit">Sign in</button>
+        </form>

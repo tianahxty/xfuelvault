@@ -1,0 +1,75 @@
+{% extends "user/base.html" %}
+ 
+{% block main-content %}
+ 
+<div class="app no-shell"><div class="content" style="padding:0 22px">
+    <div style="padding-top:30px">
+ 
+      {% if redemption and not error %}
+      <div style="text-align:center;margin-bottom:8px">
+        <span class="badge badge-healthy" style="font-size:12px;padding:6px 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.3 2.3L16 9.7"/></svg> Valid redemption</span>
+      </div>
+      <h1 style="font-size:19px;text-align:center;margin-top:14px">Confirm Redemption</h1>
+ 
+      <div class="card" style="margin-top:22px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="side-avatar" style="width:46px;height:46px;font-size:16px">{{ redemption.user.username|slice:":1"|upper }}</div>
+          <div>
+            <div style="font-weight:600;font-size:15px">{{ redemption.user.get_full_name|default:redemption.user.username }}</div>
+            <div class="txn-sub">Customer since {{ redemption.user.date_joined|date:"M Y" }}</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="price-row"><span style="font-size:13px;color:var(--ink-soft)">Redeeming</span><span class="mono" style="font-weight:600;font-size:18px">{{ redemption.litres_redeemed }}L</span></div>
+        <div class="divider"></div>
+        <div class="price-row"><span style="font-size:13px;color:var(--ink-soft)">Station</span><span style="font-weight:500;font-size:13px">{{ redemption.station.name }}</span></div>
+        <div class="divider"></div>
+        <div class="price-row"><span style="font-size:13px;color:var(--ink-soft)">Verification code</span><span class="mono" style="font-weight:500">{{ redemption.verificaton_code }}</span></div>
+      </div>
+ 
+      <div class="notice notice-green" style="margin-top:16px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg><div>Code matches. This QR has not been used before.</div></div>
+ 
+      <!--
+          CHANGE: form now posts back to the SAME url (empty action = current
+          page), which already contains the qr_code in the URL path itself
+          — that's how the view knows which redemption to confirm. The old
+          action="/attendant/confirm/" pointed at a URL with no qr_code in
+          it at all, which wouldn't have matched your real URL pattern.
+          The hidden "redemption_code" input is removed since the view
+          doesn't read it — the qr_code in the URL is what identifies the
+          redemption, not a posted field.
+      -->
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary" style="margin-top:22px;padding:18px;background:var(--green-700)">Confirm Fuel Redemption</button>
+      </form>
+ 
+      {% else %}
+      <!--
+          NEW: this branch renders when the redemption wasn't found, or
+          when the view's error message is set (already redeemed, expired,
+          or cancelled) — the original template had no way to show this
+          at all, since everything was hardcoded to always look valid.
+      -->
+      <div style="text-align:center;margin-bottom:8px">
+        <span class="badge badge-expired" style="font-size:12px;padding:6px 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M6 6l12 12M18 6 6 18" /></svg> Cannot confirm</span>
+      </div>
+      <h1 style="font-size:19px;text-align:center;margin-top:14px">Confirm Redemption</h1>
+ 
+      <div class="notice notice-amber" style="margin-top:20px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg>
+        <div>{{ error|default:"This redemption code was not found." }}</div>
+      </div>
+      {% endif %}
+ 
+      <!--
+          NOTE: this still points to a static demo filename — you don't
+          yet have a real "attendant portal" view/URL for attendants to
+          land on after cancelling. Flag it when you're ready to build
+          that page and I'll wire the real link in.
+      -->
+      <a class="btn btn-secondary" href="17-attendant-portal.html" style="margin-top:10px">Cancel</a>
+    </div>
+    </div></div>
+ 
+    {% endblock  %}
