@@ -2,7 +2,7 @@ from django.urls import path
 from .views import aboutView, attendantPortal, loginView, registerView, pricemanageView, stationView, litrelotsView, buylitreView, mydashboardView, purchasesuccessView, user_management, purchaseCreateView,fromPaystackRedirectView,proceedToPaystack, errorView,failureView, attendantConfirm, attendantSuccess, qrexpired, redeemfuel, qrgenerateView,loginTesting, registerTesting
 
 urlpatterns = [
-    path('', aboutView, name='home'),
+    path('', mydashboardView, name='home'),
     # path('dashboard/', dashboardView, name='dashboard'),
     path('login/', loginView, name='user-login'),
     path('register/', registerView, name='user-register'),
